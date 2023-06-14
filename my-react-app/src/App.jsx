@@ -1,50 +1,73 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 const FlashcardApp = () => {
   const [flashcards, setFlashcards] = useState([]);
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newAnswer, setNewAnswer] = useState("");
 
-  const addFlashcard = () => {
-    const newFlashcards = [...flashcards, { question, answer }];
-    setFlashcards(newFlashcards);
-    setQuestion("");
-    setAnswer("");
+  const handleNewQuestionChange = (event) => {
+    setNewQuestion(event.target.value);
   };
 
-  const removeFlashcard = (index) => {
-    const newFlashcards = [...flashcards];
-    newFlashcards.splice(index, 1);
-    setFlashcards(newFlashcards);
+  const handleNewAnswerChange = (event) => {
+    setNewAnswer(event.target.value);
+  };
+
+  const handleAddFlashcard = () => {
+    if (newQuestion.trim() !== "" && newAnswer.trim() !== "") {
+      const newFlashcard = {
+        question: newQuestion,
+        answer: newAnswer,
+      };
+
+      setFlashcards([...flashcards, newFlashcard]);
+      setNewQuestion("");
+      setNewAnswer("");
+    }
+  };
+
+  const handleDeleteFlashcard = (index) => {
+    const updatedFlashcards = [...flashcards];
+    updatedFlashcards.splice(index, 1);
+    setFlashcards(updatedFlashcards);
   };
 
   return (
-    <div>
-      <h1>Flashcard App</h1>
+    <div className="container">
+      <h1 className="title">Flashcard App</h1>
 
-      <div>
+      <div className="flashcard-form">
         <input
           type="text"
-          placeholder="Question"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
+          value={newQuestion}
+          onChange={handleNewQuestionChange}
+          className="flashcard-input"
+          placeholder="Enter a new question"
         />
         <input
           type="text"
-          placeholder="Answer"
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          value={newAnswer}
+          onChange={handleNewAnswerChange}
+          className="flashcard-input"
+          placeholder="Enter the answer"
         />
-        <button onClick={addFlashcard}>Add Flashcard</button>
+        <button className="add-button" onClick={handleAddFlashcard}>
+          Add
+        </button>
       </div>
 
-      <div>
+      <div className="flashcard-list">
         {flashcards.map((flashcard, index) => (
-          <div key={index}>
-            <div>Question: {flashcard.question}</div>
-            <div>Answer: {flashcard.answer}</div>
-            <button onClick={() => removeFlashcard(index)}>Remove</button>
+          <div className="flashcard" key={index}>
+            <h3 className="flashcard-title">Flashcard {index + 1}</h3>
+            <p className="flashcard-content">Question: {flashcard.question}</p>
+            <p className="flashcard-content">Answer: {flashcard.answer}</p>
+            <button
+              className="delete-button"
+              onClick={() => handleDeleteFlashcard(index)}>
+              Delete
+            </button>
           </div>
         ))}
       </div>
